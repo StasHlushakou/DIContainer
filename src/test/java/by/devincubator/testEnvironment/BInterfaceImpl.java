@@ -11,7 +11,6 @@ public class BInterfaceImpl implements BInterface {
         this.aInterface = aInterface;
     }
 
-
     @Override
     public void testB() {
 

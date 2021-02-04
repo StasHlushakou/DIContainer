@@ -15,32 +15,32 @@ public class InjectorImplTestGetProvider {
     public void bindingNotFoundExceptionTest() {
         Injector injector = new InjectorImpl();
         injector.bind(BInterface.class, BInterfaceImpl.class);
-        Provider<BInterface> testProvider = injector.getProvider(BInterface.class); //получаем инстанс класса из инжектора
+        Provider<BInterface> bInterfaceProvider = injector.getProvider(BInterface.class);
     }
 
     @Test(expected = BindingNotFoundException.class)
     public void BindingNotFoundExceptionSingletonTest() {
         Injector injector = new InjectorImpl();
         injector.bindSingleton(BInterface.class, BInterfaceImpl.class);
-        Provider<BInterface> testProvider = injector.getProvider(BInterface.class); //получаем инстанс класса из инжектора
+        Provider<BInterface> bInterfaceProvider = injector.getProvider(BInterface.class);
     }
 
     @Test
     public void nullProvider() {
         Injector injector = new InjectorImpl();
-        Provider<BInterface> testProvider = injector.getProvider(BInterface.class); //получаем инстанс класса из инжектора
+        Provider<BInterface> testProvider = injector.getProvider(BInterface.class);
         assertNull(testProvider);
     }
 
     @Test
     public void testGetProvider()     {
-        Injector injector = new InjectorImpl(); //создаем имплементацию инжектора
-        injector.bindSingleton(AInterface.class, AInterfaceImplAnnotationInject.class); //добавляем в инжектор реализацию интерфейса
-        injector.bind(BInterface.class, BInterfaceImpl.class); //добавляем в инжектор реализацию интерфейса
-        Provider<AInterface> aInterfaceProvider1 = injector.getProvider(AInterface.class); //получаем инстанс класса из инжектора
-        Provider<AInterface> aInterfaceProvider2 = injector.getProvider(AInterface.class); //получаем инстанс класса из инжектора
-        Provider<BInterface> bInterfaceProvider1 = injector.getProvider(BInterface.class); //получаем инстанс класса из инжектора
-        Provider<BInterface> bInterfaceProvider2 = injector.getProvider(BInterface.class); //получаем инстанс класса из инжектора
+        Injector injector = new InjectorImpl();
+        injector.bindSingleton(AInterface.class, AInterfaceImplAnnotationInject.class);
+        injector.bind(BInterface.class, BInterfaceImpl.class);
+        Provider<AInterface> aInterfaceProvider1 = injector.getProvider(AInterface.class);
+        Provider<AInterface> aInterfaceProvider2 = injector.getProvider(AInterface.class);
+        Provider<BInterface> bInterfaceProvider1 = injector.getProvider(BInterface.class);
+        Provider<BInterface> bInterfaceProvider2 = injector.getProvider(BInterface.class);
 
         assertNotNull(aInterfaceProvider1);
         assertNotNull(bInterfaceProvider1);

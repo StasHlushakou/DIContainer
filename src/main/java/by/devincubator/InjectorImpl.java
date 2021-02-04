@@ -33,11 +33,10 @@ public class InjectorImpl implements Injector {
             return null;
         }
 
-
         Constructor neededConstructor = findAnnotateInjectConstructorOrDefaultConstructor(impl);
         List<Object> argsList = new ArrayList();
         for (Class parameterType : neededConstructor.getParameterTypes()) {
-            if (getProvider(parameterType) == null) throw new BindingNotFoundException();
+            if (getProvider(parameterType) == null) throw new BindingNotFoundException("Missing binding for " + parameterType.getTypeName());
             argsList.add(getProvider(parameterType).getInstance());
         }
         try {
@@ -70,7 +69,7 @@ public class InjectorImpl implements Injector {
             if (constructor.isAnnotationPresent(Inject.class)){
                 returnedConstructor = constructor;
                 constructorWithAnnotationInjectCounter++;
-                if (constructorWithAnnotationInjectCounter > 1) throw new TooManyConstructorsException();
+                if (constructorWithAnnotationInjectCounter > 1) throw new TooManyConstructorsException("The class "+ impl.getName() +" have more than one constructor with @Inject annotation");
             }
         }
 
@@ -80,7 +79,7 @@ public class InjectorImpl implements Injector {
             try {
                 returnedConstructor = impl.getDeclaredConstructor();
             } catch (NoSuchMethodException e) {
-                throw new ConstructorNotFoundException();
+                throw new ConstructorNotFoundException("The class "+ impl.getName() +" does not have a constructor with @Inject annotation or default constructor");
             }
         }
 
