@@ -77,7 +77,7 @@ public class InjectorImpl implements Injector {
             return returnedConstructor;
         } else {
             try {
-                returnedConstructor = impl.getDeclaredConstructor();
+                returnedConstructor = impl.getConstructor();
             } catch (NoSuchMethodException e) {
                 throw new ConstructorNotFoundException("The class "+ impl.getName() +" does not have a constructor with @Inject annotation or default constructor");
             }
