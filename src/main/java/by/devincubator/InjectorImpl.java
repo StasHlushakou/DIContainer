@@ -65,7 +65,7 @@ public class InjectorImpl implements Injector {
         int constructorWithAnnotationInjectCounter = 0;
         Constructor returnedConstructor = null;
 
-        for (Constructor constructor : impl.getDeclaredConstructors()) {
+        for (Constructor constructor : impl.getConstructors()) {
             if (constructor.isAnnotationPresent(Inject.class)){
                 returnedConstructor = constructor;
                 constructorWithAnnotationInjectCounter++;
