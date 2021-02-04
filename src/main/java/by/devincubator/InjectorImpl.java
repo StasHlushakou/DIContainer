@@ -5,56 +5,60 @@ import by.devincubator.exception.BindingNotFoundException;
 import by.devincubator.exception.ConstructorNotFoundException;
 import by.devincubator.exception.TooManyConstructorsException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class InjectorImpl implements Injector {
 
     private Map <Class, Class> bindingMap = new HashMap();
-    private Map <Class, Provider> singletonMap = new HashMap();
+    private Map <Class, Class> singletonMap = new HashMap();
+    private Map <Class, Provider> SingletonProviderMap = new HashMap();
 
-    public <T> Provider<T> getProvider(Class<T> type) throws BindingNotFoundException {
+    public synchronized <T> Provider<T> getProvider(Class<T> type) throws BindingNotFoundException {
 
-        Class impl = findBind(type);
-        if (impl == null) return null;
+        if (SingletonProviderMap.containsKey(type)){
+            return SingletonProviderMap.get(type);
+        }
+
+        Provider provider = null;
+        boolean isSingletone;
+        Class impl;
+
+        if (bindingMap.containsKey(type)){
+            impl =  bindingMap.get(type);
+            isSingletone = false;
+        } else if (singletonMap.containsKey(type)) {
+            impl =  singletonMap.get(type);
+            isSingletone = true;
+        } else {
+            return null;
+        }
+
 
         Constructor neededConstructor = findAnnotateInjectConstructorOrDefaultConstructor(impl);
         List<Object> argsList = new ArrayList();
-
         for (Class parameterType : neededConstructor.getParameterTypes()) {
             if (getProvider(parameterType) == null) throw new BindingNotFoundException();
             argsList.add(getProvider(parameterType).getInstance());
         }
-
-        Provider provider = null;
         try {
             provider = new ProviderImpl(neededConstructor.newInstance(argsList.toArray()));
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
 
-        return provider;
+        if(isSingletone) SingletonProviderMap.put(type, provider);
 
+        return provider;
     }
 
     public <T> void bind(Class<T> intf, Class<? extends T> impl) throws TooManyConstructorsException, ConstructorNotFoundException {
-
         findAnnotateInjectConstructorOrDefaultConstructor(impl);
-
         bindingMap.put(intf, impl);
     }
 
     public <T> void bindSingleton(Class<T> intf, Class<? extends T> impl) throws TooManyConstructorsException, ConstructorNotFoundException {
-
-
-    }
-
-    private <T> Class findBind(Class<T> type) {
-        return bindingMap.get(type);
+        findAnnotateInjectConstructorOrDefaultConstructor(impl);
+        singletonMap.put(intf, impl);
     }
 
     private static <T> Constructor findAnnotateInjectConstructorOrDefaultConstructor(Class<? extends T> impl) throws TooManyConstructorsException, ConstructorNotFoundException{

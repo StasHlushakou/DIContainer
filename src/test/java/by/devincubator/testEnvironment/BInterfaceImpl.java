@@ -16,4 +16,8 @@ public class BInterfaceImpl implements BInterface {
     public void testB() {
 
     }
+
+    public AInterface getaInterface() {
+        return aInterface;
+    }
 }
