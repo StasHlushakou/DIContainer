@@ -1,33 +1,22 @@
 package by.devincubator;
 
+import by.devincubator.testEnvironment.AInterface;
+import by.devincubator.testEnvironment.AInterfaceImplAnnotationInject;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 
 public class InjectorImplTest {
 
     @Test
-    public void getProvider() {
-    }
-
-    @Test
-    public void bind() {
-    }
-
-    @Test
-    public void bindSingleton() {
-    }
-
-    /*
-    @Test
     public void testExistingBinding()     {
         Injector injector = new InjectorImpl(); //создаем имплементацию инжектора
-        injector.bind(EventDAO.class, InMemoryEventDAOImpl.class); //добавляем в инжектор реализацию интерфейса
-        Provider<EventDAO> daoProvider = injector.getProvider(EventDAO.class); //получаем инстанс класса из инжектора
-        assertNotNull(daoProvider);
-        assertNotNull(daoProvider.getInstance());
-        assertSame(InMemoryEventDAOImpl.class, daoProvider.getInstance().getClass());
+        injector.bind(AInterface.class, AInterfaceImplAnnotationInject.class); //добавляем в инжектор реализацию интерфейса
+        Provider<AInterface> aInterfaceProvider = injector.getProvider(AInterface.class); //получаем инстанс класса из инжектора
+        assertNotNull(aInterfaceProvider);
+        assertNotNull(aInterfaceProvider.getInstance());
+        assertSame(AInterfaceImplAnnotationInject.class, aInterfaceProvider.getInstance().getClass());
     }
-
-     */
-
 
 }
